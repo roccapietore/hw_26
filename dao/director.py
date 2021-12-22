@@ -1,14 +1,16 @@
-from dao.model.director import Director
+from sqlalchemy.orm.scoping import scoped_session
+from dao.models import Director
 
 
 class DirectorDAO:
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, session: scoped_session):
+        self._db_session = session
 
-    def get_one(self, bid):
-        return self.session.query(Director).get(bid)
+    def get_by_id(self, pk):
+        return self._db_session.query(Director).filter(Director.id == pk).one_or_none()
 
     def get_all(self):
-        return self.session.query(Director).all()
+        return self._db_session.query(Director).all()
+
 
 

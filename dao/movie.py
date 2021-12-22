@@ -1,12 +1,14 @@
-from dao.model.movie import Movie
+from sqlalchemy.orm.scoping import scoped_session
+from dao.models.movie import Movie
 
 
 class MovieDAO:
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, session: scoped_session):
+        self._db_session = session
 
-    def get_one(self, bid):
-        return self.session.query(Movie).get(bid)
+    def get_by_id(self, pk):
+        return self._db_session.query(Movie).filter(Movie.id == pk).one_or_none()
 
-    def get_all(self, filters):
-        return self.session.query(Movie).all()
+    def get_all(self):
+        return self._db_session.query(Movie).all()
+

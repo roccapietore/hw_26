@@ -1,23 +1,26 @@
-from implemented import movie_service
-from flask import request
-from flask_restx import Resource, Namespace
-from dao.model.movie import MovieSchema
+from flask_restx import abort, Namespace, Resource
+from exceptions import ItemNotFound
+from service.movie import MoviesService
+from setupdb import db
 
-movie_ns = Namespace('movies')
+movies_ns = Namespace("movies_ns")
 
 
-@movie_ns.route('/')
+@movies_ns.route("/")
 class MoviesView(Resource):
+    @movies_ns.response(200, "OK")
     def get(self):
-        all_movies = movie_service.get_all()
-        res = MovieSchema(many=True).dump(all_movies)
-        return res, 200
+        """Get all movies"""
+        return MoviesService(db.session).get_all_movies()
 
 
-@movie_ns.route('/<int:bid>')
+@movies_ns.route("/<int:movie_id>")
 class MovieView(Resource):
-
-    def get(self, bid):
-        b = movie_service.get_one(bid)
-        sm_d = MovieSchema().dump(b)
-        return sm_d, 200
+    @movies_ns.response(200, "OK")
+    @movies_ns.response(404, "Movie not found")
+    def get(self, movie_id: int):
+        """Get Movie by id"""
+        try:
+            return MoviesService(db.session).get_item_by_id(movie_id)
+        except ItemNotFound:
+            abort(404, message="Movie not found")

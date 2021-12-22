@@ -1,10 +1,11 @@
-from marshmallow import Schema, fields
+from dao.models.base import BaseMixin
 from setupdb import db
 
 
-class Movie(db.Model):
-    __tablename__ = 'movies'
-    id = db.Column(db.Integer, primary_key=True)
+class Movie(BaseMixin, db.Model):
+    __tablename__ = "movies"
+
+    name = db.Column(db.String(100), unique=True, nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(200), nullable=False)
     trailer = db.Column(db.String(200), nullable=False)
@@ -14,12 +15,3 @@ class Movie(db.Model):
     genre = db.relationship("Genre")
     director_id = db.Column(db.Integer, db.ForeignKey("directors.id"))
     director = db.relationship("Director")
-
-
-class MovieSchema(Schema):
-    id = fields.Int()
-    title = fields.Str()
-    description = fields.Str()
-    trailer = fields.Str()
-    year = fields.Int()
-    rating = fields.Float()

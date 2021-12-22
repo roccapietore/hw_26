@@ -1,15 +1,20 @@
 from dao.movie import MovieDAO
+from exceptions import ItemNotFound
+from schemas.movie import MovieSchema
+from service.base import BaseService
 
 
-class MovieService:
-    def __init__(self, dao: MovieDAO):
-        self.dao = dao
+class MoviesService(BaseService):
+    def get_item_by_id(self, pk):
+        movie = MovieDAO(self._db_session).get_by_id(pk)
+        if not movie:
+            raise ItemNotFound
+        return MovieSchema().dump(movie)
 
-    def get_one(self, bid):
-        return self.dao.get_one(bid)
+    def get_all_movies(self):
+        movies = MovieDAO(self._db_session).get_all()
+        return MovieSchema(many=True).dump(movies)
 
-    def get_all(self):
-        return self.dao.get_all()
 
 
 
