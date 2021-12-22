@@ -1,5 +1,5 @@
 from sqlalchemy.orm.scoping import scoped_session
-from dao.models.movie import Movie
+from project.dao.models.movie import Movie
 
 
 class MovieDAO:

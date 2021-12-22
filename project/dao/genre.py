@@ -1,5 +1,5 @@
 from sqlalchemy.orm.scoping import scoped_session
-from dao.models import Genre
+from project.dao.models import Genre
 
 
 class GenreDAO:

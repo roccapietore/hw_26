@@ -1,7 +1,7 @@
-from config import DevelopmentConfig
-from dao.models import *
-from app import create_app
-from setupdb import db
+from project.config import DevelopmentConfig
+from project.dao.models import *
+from project.app import create_app
+from project.setupdb import db
 
 app = create_app(DevelopmentConfig)
 

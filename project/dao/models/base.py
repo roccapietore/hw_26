@@ -1,4 +1,4 @@
-from setupdb import db
+from project.setupdb import db
 
 
 class BaseMixin(object):

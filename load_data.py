@@ -1,11 +1,11 @@
 from sqlalchemy.exc import IntegrityError
-from config import DevelopmentConfig
-from dao.models.genre import Genre
-from dao.models.movie import Movie
-from dao.models.director import Director
-from app import create_app
-from setupdb import db
-from utils import read_json
+from project.config import DevelopmentConfig
+from project.dao.models.genre import Genre
+from project.dao.models.movie import Movie
+from project.dao.models.director import Director
+from project.app import create_app
+from project.setupdb import db
+from project.utils import read_json
 
 app = create_app(DevelopmentConfig)
 data = read_json("data.json")

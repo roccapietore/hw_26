@@ -1,5 +1,5 @@
-from dao.models.base import BaseMixin
-from setupdb import db
+from project.dao.models.base import BaseMixin
+from project.setupdb import db
 
 
 class Genre(BaseMixin, db.Model):

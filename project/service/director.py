@@ -1,7 +1,7 @@
-from dao.director import DirectorDAO
-from exceptions import ItemNotFound
-from schemas.director import DirectorSchema
-from service.base import BaseService
+from project.dao.director import DirectorDAO
+from project.exceptions import ItemNotFound
+from project.schemas.director import DirectorSchema
+from project.service.base import BaseService
 
 
 class DirectorsService(BaseService):

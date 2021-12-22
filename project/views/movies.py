@@ -1,7 +1,7 @@
 from flask_restx import abort, Namespace, Resource
-from exceptions import ItemNotFound
-from service.movie import MoviesService
-from setupdb import db
+from project.exceptions import ItemNotFound
+from project.service.movie import MoviesService
+from project.setupdb import db
 
 movies_ns = Namespace("movies_ns")
 

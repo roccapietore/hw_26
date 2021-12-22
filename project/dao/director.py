@@ -1,5 +1,5 @@
 from sqlalchemy.orm.scoping import scoped_session
-from dao.models import Director
+from project.dao.models import Director
 
 
 class DirectorDAO:

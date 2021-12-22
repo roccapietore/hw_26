@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_restx import Api
 
-from setupdb import db
-from views.genres import genres_ns
-from views.directors import directors_ns
-from views.movies import movies_ns
+from project.setupdb import db
+from project.views.genres import genres_ns
+from project.views.directors import directors_ns
+from project.views.movies import movies_ns
 
 
 api = Api(

@@ -1,7 +1,7 @@
-from dao.movie import MovieDAO
-from exceptions import ItemNotFound
-from schemas.movie import MovieSchema
-from service.base import BaseService
+from project.dao.movie import MovieDAO
+from project.exceptions import ItemNotFound
+from project.schemas.movie import MovieSchema
+from project.service.base import BaseService
 
 
 class MoviesService(BaseService):
