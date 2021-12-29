@@ -11,10 +11,14 @@ class MoviesService(BaseService):
             raise ItemNotFound
         return MovieSchema().dump(movie)
 
-    def get_all_movies(self):
-        movies = MovieDAO(self._db_session).get_all()
+    def get_all_movies(self, filters):
+
+        if filters.get("page") is not None:
+            movies = MovieDAO(self._db_session).get_all(filters.get("page"))
+        elif filters.get("status") is not None:
+            movies = MovieDAO(self._db_session).get_all(filters.get("status"))
+        else:
+            movies = MovieDAO(self._db_session).get_all()
+        if not movies:
+            raise ItemNotFound
         return MovieSchema(many=True).dump(movies)
-
-
-
-

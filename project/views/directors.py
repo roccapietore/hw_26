@@ -3,7 +3,7 @@ from project.exceptions import ItemNotFound
 from project.service.director import DirectorsService
 from project.setupdb import db
 
-directors_ns = Namespace("directors_ns")
+directors_ns = Namespace("directors")
 
 
 @directors_ns.route("/")
