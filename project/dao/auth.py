@@ -8,3 +8,4 @@ class AuthDAO(BaseDao):
         self._db_session.add(new_user)
         self._db_session.commit()
         return new_user
+

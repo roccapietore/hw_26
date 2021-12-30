@@ -4,6 +4,7 @@ from project.dao.models.movie import Movie
 
 
 class MovieDAO(BaseDao):
+
     def get_by_id(self, pk):
         return self._db_session.query(Movie).filter(Movie.id == pk).one_or_none()
 

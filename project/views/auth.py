@@ -34,7 +34,7 @@ class LoginView(Resource):
         req_json = request.json
         try:
             data = AuthValidator().load(req_json)
-            tokens = AuthService(db.session).compare_data(**data)
+            tokens = AuthService(db.session).compare_data(data)
             return tokens, 201
         except ValidationError:
             abort(404)

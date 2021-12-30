@@ -19,25 +19,26 @@ class AuthService(BaseService):
     def get_tokens(data):
         min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         data["exp"] = calendar.timegm(min30.timetuple())
-        access_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm=["HS256"])
+        access_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm="HS256")
+
         days130 = datetime.datetime.utcnow() + datetime.timedelta(days=130)
         data["exp"] = calendar.timegm(days130.timetuple())
-        refresh_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm=["HS256"])
+        refresh_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm="HS256")
         return {"access_token": access_token, "refresh_token": refresh_token}
 
-    def compare_data(self, email, password):
-        user = self._db_session.query(User).filter(User.email == email).first()
-        if not user or user.password != generate_password_digest(password):
+    def compare_data(self, data):
+        user = self._db_session.query(User).filter(User.email == data["email"]).first()
+        if not user or user.password != generate_password_digest(data["password"]):
             return abort(404)
 
         return self.get_tokens({
             "email": user.email,
-            "password": user.password
+            "password": data["password"]
         })
 
     def get_refresh_token(self, refresh_token):
         try:
-            data = jwt.decode(jwt=refresh_token, key=current_app.config["SECRET_KEY"], algorithms=["HS256"])
+            data = jwt.decode(jwt=refresh_token, key=current_app.config["SECRET_KEY"], algorithms="HS256")
             return self.get_tokens(data)
         except ItemNotFound:
             abort(404)

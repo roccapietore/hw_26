@@ -1,6 +1,5 @@
 from flask import request
 from flask_restx import abort, Namespace, Resource
-
 from project.exceptions import ItemNotFound
 from project.service import GenresService
 from project.setupdb import db
