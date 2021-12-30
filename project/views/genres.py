@@ -1,3 +1,4 @@
+from flask import request
 from flask_restx import abort, Namespace, Resource
 
 from project.exceptions import ItemNotFound
@@ -10,9 +11,15 @@ genres_ns = Namespace("genres")
 @genres_ns.route("/")
 class GenresView(Resource):
     @genres_ns.response(200, "OK")
+    @genres_ns.response(404, "Genres not found")
     def get(self):
         """Get all genres"""
-        return GenresService(db.session).get_all_genres()
+        page = request.args.get("page")
+        filters = {"page": page}
+        try:
+            return GenresService(db.session).get_all_genres(filters)
+        except ItemNotFound:
+            abort(404, message="Genres not found")
 
 
 @genres_ns.route("/<int:genre_id>")

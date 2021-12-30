@@ -4,6 +4,7 @@ from marshmallow import Schema, fields, ValidationError
 
 from project.exceptions import ItemNotFound
 from project.service.auth import AuthService
+from project.setupdb import db
 
 auth_ns = Namespace('auth')
 
@@ -21,21 +22,19 @@ class AuthView(Resource):
         """Create new user"""
         req_json = request.json
         try:
-            user = AuthService.create(req_json)
-            return "", 201, {"location": f"/users/{user.id}"}
+            user = AuthService(db.session).create(**req_json)
+            return "", 201, {"location": f"/auth/register/{user.id}"}
         except ItemNotFound:
-            abort(404, "Oooops")
+            abort(404, message="Oooops")
 
 
-
-"""
 @auth_ns.route('/login')
-class AuthView(Resource):
+class LoginView(Resource):
     def post(self):
         req_json = request.json
         try:
             data = AuthValidator().load(req_json)
-            tokens = AuthService.get_tokens(data)
+            tokens = AuthService(db.session).compare_data(**data)
             return tokens, 201
         except ValidationError:
             abort(404)
@@ -43,9 +42,9 @@ class AuthView(Resource):
     def put(self):
         req_json = request.json
         refresh_token = req_json.get("refresh_token")
-        if refresh_token is None:
-            abort(404)
-        tokens = AuthService.get_refresh_token(refresh_token)
-        return tokens, 201
+        try:
+            tokens = AuthService(db.session).get_refresh_token(refresh_token)
+            return tokens, 201
+        except ItemNotFound:
+            abort(404, message="Oooops")
 
-"""

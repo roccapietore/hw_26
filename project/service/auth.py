@@ -1,37 +1,34 @@
 import jwt
+from project.dao.auth import AuthDAO
+from project.dao.models import User
+from project.exceptions import ItemNotFound
+from project.service.base import BaseService
+from project.tools.security import generate_password_digest
+from flask import current_app
 import calendar
 import datetime
 from flask_restx import abort
-from project.dao.auth import AuthDAO
-from project.service.base import BaseService
-from project.tools.security import generate_password_digest
 
 
 class AuthService(BaseService):
     def create(self, **user):
         user["password"] = generate_password_digest(user.get("password"))
-        return AuthDAO(self._db_session).create(user)
+        return AuthDAO(self._db_session).create(**user)
 
-
-
-
-
-"""
     @staticmethod
     def get_tokens(data):
         min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         data["exp"] = calendar.timegm(min30.timetuple())
-        access_token = jwt.encode(data, SECRET_KEY, algorithm=algo)
+        access_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm=["HS256"])
         days130 = datetime.datetime.utcnow() + datetime.timedelta(days=130)
         data["exp"] = calendar.timegm(days130.timetuple())
-        refresh_token = jwt.encode(data, SECRET_KEY, algorithm=algo)
-        tokens = {"access_token": access_token, "refresh_token": refresh_token}
-        return tokens
+        refresh_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm=["HS256"])
+        return {"access_token": access_token, "refresh_token": refresh_token}
 
-    def user_by_username(self, username, password):
-        user = db.session.query(User).filter(User.username == username).first()
-        if not user or user.password != UserService.get_hash(password):
-            return abort(401)
+    def compare_data(self, email, password):
+        user = self._db_session.query(User).filter(User.email == email).first()
+        if not user or user.password != generate_password_digest(password):
+            return abort(404)
 
         return self.get_tokens({
             "email": user.email,
@@ -40,8 +37,7 @@ class AuthService(BaseService):
 
     def get_refresh_token(self, refresh_token):
         try:
-            data = jwt.decode(jwt=refresh_token, key=secret, algorithms=[algo])
+            data = jwt.decode(jwt=refresh_token, key=current_app.config["SECRET_KEY"], algorithms=["HS256"])
             return self.get_tokens(data)
-        except:
+        except ItemNotFound:
             abort(404)
-"""

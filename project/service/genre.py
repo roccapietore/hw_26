@@ -11,8 +11,13 @@ class GenresService(BaseService):
             raise ItemNotFound
         return GenreSchema().dump(genre)
 
-    def get_all_genres(self):
-        genres = GenreDAO(self._db_session).get_all()
+    def get_all_genres(self, filters):
+        if filters.get("page") is not None:
+            genres = GenreDAO(self._db_session).get_all(filters)
+        else:
+            genres = GenreDAO(self._db_session).get_all(filters)
+        if not genres:
+            raise ItemNotFound
         return GenreSchema(many=True).dump(genres)
 
 
