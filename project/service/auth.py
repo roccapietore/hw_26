@@ -8,7 +8,7 @@ from project.tools.security import generate_password_digest
 
 
 class AuthService(BaseService):
-    def create(self, user):
+    def create(self, **user):
         user["password"] = generate_password_digest(user.get("password"))
         return AuthDAO(self._db_session).create(user)
 

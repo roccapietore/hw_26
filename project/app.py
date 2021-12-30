@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restx import Api
 
 from project.setupdb import db
+from project.views.auth import auth_ns
 from project.views.genres import genres_ns
 from project.views.directors import directors_ns
 from project.views.movies import movies_ns
@@ -25,6 +26,8 @@ def create_app(config_obj):
     api.add_namespace(genres_ns)
     api.add_namespace(directors_ns)
     api.add_namespace(movies_ns)
+    api.add_namespace(auth_ns)
+
 
     return app
 

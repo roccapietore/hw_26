@@ -9,10 +9,9 @@ class MovieDAO(BaseDao):
 
     def get_all(self, filters):
         t = self._db_session.query(Movie)
-        if "page" in filters:
-            t = t.limit(12).offset(12*(filters.page - 1))
-
-        if "status" in filters:
+        if filters["page"]:
+            t = t.limit(12).offset((int(filters.get("page")) - 1) * 12)
+        elif filters["status"] == "new":
             t = t.order_by(desc(Movie.year))
         return t.all()
 
