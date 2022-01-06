@@ -14,7 +14,7 @@ class UserDAO(BaseDao):
         updated_user.name = user.get("name")
         updated_user.surname = user.get("surname")
         updated_user.favorite_genre = user.get("favorite_genre")
-        updated_user.password = user.get("password")
+        updated_user.password = generate_password_digest(user.get("password"))
 
         self._db_session.add(updated_user)
         self._db_session.commit()

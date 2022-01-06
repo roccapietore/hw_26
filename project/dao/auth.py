@@ -9,3 +9,6 @@ class AuthDAO(BaseDao):
         self._db_session.commit()
         return new_user
 
+    def get_user(self, data):
+        user = self._db_session.query(User).filter(User.email == data["email"]).first()
+        return user

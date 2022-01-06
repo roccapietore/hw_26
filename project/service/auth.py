@@ -1,13 +1,11 @@
 import jwt
 from project.dao.auth import AuthDAO
-from project.dao.models import User
 from project.exceptions import ItemNotFound
 from project.service.base import BaseService
 from project.tools.security import generate_password_digest
-from flask import current_app
+from flask import current_app, json
 import calendar
 import datetime
-from flask_restx import abort
 
 
 class AuthService(BaseService):
@@ -26,19 +24,19 @@ class AuthService(BaseService):
         refresh_token = jwt.encode(data, key=current_app.config["SECRET_KEY"], algorithm="HS256")
         return {"access_token": access_token, "refresh_token": refresh_token}
 
-    def compare_data(self, data):
-        user = self._db_session.query(User).filter(User.email == data["email"]).first()
+    def get_user(self, data):
+        user = AuthDAO(self._db_session).get_user(data)
         if not user or user.password != generate_password_digest(data["password"]):
-            return abort(404)
-
-        return self.get_tokens({
-            "email": user.email,
-            "password": data["password"]
-        })
+            return ItemNotFound
+        user_data = {
+            "id": user.id,
+            "email": user.email
+        }
+        return self.get_tokens(user_data)
 
     def get_refresh_token(self, refresh_token):
         try:
             data = jwt.decode(jwt=refresh_token, key=current_app.config["SECRET_KEY"], algorithms="HS256")
             return self.get_tokens(data)
         except ItemNotFound:
-            abort(404)
+            "error"

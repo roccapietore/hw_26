@@ -22,24 +22,26 @@ class AuthView(Resource):
         """Create new user"""
         req_json = request.json
         try:
-            user = AuthService(db.session).create(**req_json)
-            return "", 201, {"location": f"/auth/register/{user.id}"}
+            AuthService(db.session).create(**req_json)
+            return "", 201
         except ItemNotFound:
             abort(404, message="Oooops")
 
 
 @auth_ns.route('/login')
 class LoginView(Resource):
+    """Get access_token & refresh_token"""
     def post(self):
         req_json = request.json
         try:
             data = AuthValidator().load(req_json)
-            tokens = AuthService(db.session).compare_data(data)
+            tokens = AuthService(db.session).get_user(data)
             return tokens, 201
         except ValidationError:
             abort(404)
 
     def put(self):
+        """Get refresh_token"""
         req_json = request.json
         refresh_token = req_json.get("refresh_token")
         try:

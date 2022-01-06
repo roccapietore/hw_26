@@ -14,7 +14,6 @@ class UserView(Resource):
     @user_ns.response(404, "User not found")
     @auth_required
     def get(self, user_id: int):
-        print(user_id)
         """Get user by id"""
         try:
             return UsersService(db.session).get_user_by_id(user_id)
