@@ -2,15 +2,15 @@ import jwt
 from project.dao.auth import AuthDAO
 from project.exceptions import ItemNotFound
 from project.service.base import BaseService
-from project.tools.security import generate_password_digest
-from flask import current_app, json
+from project.tools.security import generate_password_digest, compare_passwords, generate_password_hash
+from flask import current_app
 import calendar
 import datetime
 
 
 class AuthService(BaseService):
     def create(self, **user):
-        user["password"] = generate_password_digest(user.get("password"))
+        user["password"] = generate_password_hash(user["password"])
         return AuthDAO(self._db_session).create(**user)
 
     @staticmethod
@@ -26,8 +26,13 @@ class AuthService(BaseService):
 
     def get_user(self, data):
         user = AuthDAO(self._db_session).get_user(data)
-        if not user or user.password != generate_password_digest(data["password"]):
+        if not user:
             return ItemNotFound
+
+        compare_passwords_ = compare_passwords(password_hash=user.password, password=data["password"])
+        if not compare_passwords_:
+            return ItemNotFound
+
         user_data = {
             "id": user.id,
             "email": user.email
