@@ -22,10 +22,12 @@ class AuthView(Resource):
         """Create new user"""
         req_json = request.json
         try:
-            AuthService(db.session).create(**req_json)
+            data = AuthValidator().load(req_json)
+            if AuthService(db.session).create(**data) == "error":
+                return "User with this email have been already registered", 409
             return "", 201
-        except ItemNotFound:
-            abort(404, message="Oooops")
+        except ValidationError:
+            abort(404, message="Все хорошо, но надо переделать")
 
 
 @auth_ns.route('/login')

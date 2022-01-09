@@ -29,7 +29,7 @@ class UserView(Resource):
         try:
             return UsersService(db.session).partially_update(user_id, req_json)
         except ItemNotFound:
-            abort(405, message="Ooops")
+            abort(405, message="Error")
 
 
 @user_ns.route("/password")
@@ -43,5 +43,5 @@ class UsersView(Resource):
         try:
             return UsersService(db.session).update(user_id, req_json)
         except ItemNotFound:
-            abort(405, message="User not found")
+            abort(405, message="Error")
 

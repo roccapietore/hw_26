@@ -2,7 +2,7 @@ import jwt
 from project.dao.auth import AuthDAO
 from project.exceptions import ItemNotFound
 from project.service.base import BaseService
-from project.tools.security import generate_password_digest, compare_passwords, generate_password_hash
+from project.tools.security import compare_passwords, generate_password_hash
 from flask import current_app
 import calendar
 import datetime
