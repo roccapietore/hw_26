@@ -15,9 +15,7 @@ class UsersService(BaseService):
         return UserDAO(self._db_session).partially_update(uid, data)
 
     def update(self, uid, data):
-        password_1 = data.get("password_1")
-        password_2 = data.get("password_2")
-        if password_1 != password_2:
+        if data["password_1"] != data["password_2"]:
             raise ItemNotFound
         return UserDAO(self._db_session).update(uid, data)
 

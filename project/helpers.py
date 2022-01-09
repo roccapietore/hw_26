@@ -12,7 +12,6 @@ def auth_required(func):
         token = data.split("Bearer ")[-1]
         try:
             user = jwt.decode(token, key=current_app.config["SECRET_KEY"], algorithms="HS256")
-            print(user, type(user["id"]))
 
             return func(*args, **kwargs, user_id=user["id"])
         except Exception as e:
