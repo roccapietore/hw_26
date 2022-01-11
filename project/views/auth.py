@@ -23,7 +23,8 @@ class AuthView(Resource):
         req_json = request.json
         try:
             data = AuthValidator().load(req_json)
-            if AuthService(db.session).create(**data) == "error":
+            new_user = AuthService(db.session).create(**data)
+            if not new_user:
                 return "User with this email have been already registered", 409
             return "", 201
         except ValidationError:
