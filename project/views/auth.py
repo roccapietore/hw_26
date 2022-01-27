@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Resource, Namespace, abort
 from marshmallow import Schema, fields, ValidationError
 
-from project.exceptions import ItemNotFound
+from project.exceptions import ItemNotFound, DuplicateUser
 from project.service.auth import AuthService
 from project.setupdb import db
 
@@ -29,6 +29,8 @@ class AuthView(Resource):
             return "", 201
         except ValidationError:
             abort(404, message="Все хорошо, но надо переделать")
+        except DuplicateUser:
+            abort(409, message="User have been already registered")
 
 
 @auth_ns.route('/login')

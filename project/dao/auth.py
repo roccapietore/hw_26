@@ -1,6 +1,6 @@
 from project.dao.base import BaseDao
 from project.dao.models.user import User
-from project.exceptions import ItemNotFound
+from project.exceptions import ItemNotFound, DuplicateUser
 
 
 class AuthDAO(BaseDao):
@@ -14,7 +14,7 @@ class AuthDAO(BaseDao):
             self._db_session.commit()
             return new_user
         except ItemNotFound:
-            "error"
+            raise DuplicateUser
     def get_user(self, data):
         user = self._db_session.query(User).filter(User.email == data["email"]).first()
         return user
