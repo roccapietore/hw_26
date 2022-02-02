@@ -4,3 +4,4 @@ SQLAlchemy~=1.4.28
 PyJWT~=2.3.0
 flask-restx==0.5.1
 Flask-SQLAlchemy==2.5.1
+psycopg2

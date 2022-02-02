@@ -1,5 +1,5 @@
 from sqlalchemy.exc import IntegrityError
-from project.config import DevelopmentConfig
+from project.config import choose_config
 from project.dao.models.genre import Genre
 from project.dao.models.movie import Movie
 from project.dao.models.director import Director
@@ -7,7 +7,7 @@ from project.app import create_app
 from project.setupdb import db
 from project.utils import read_json
 
-app = create_app(DevelopmentConfig)
+app = create_app(choose_config())
 data = read_json("data.json")
 
 with app.app_context():
