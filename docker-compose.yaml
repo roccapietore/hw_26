@@ -27,7 +27,7 @@ services:
     env_file:
       - .env
     depends_on:
-      postgres:
+      migrations:
         condition: service_completed_successfully
     command: flask run -h 0.0.0.0 -p 80
     ports:
