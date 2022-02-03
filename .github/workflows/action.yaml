@@ -1,0 +1,30 @@
+name: Build action
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t ${{ secrets.USERNAME }}/skypro-1:latest .
+      - name: docker push
+        run: docker push ${{ secrets.USERNAME }}/skypro-1:latest .
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: clone congig
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "course_work_3/docker-compose.yaml"
+          target: app
+          strip_components: 1
+          script: |
+            docker-compose down
+            docker-compose up -d
