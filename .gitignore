@@ -1,3 +1,4 @@
 project.db
 __pycache__
 .idea
+.env
